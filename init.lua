@@ -4,7 +4,7 @@ obj.__index = obj
 
 -- Metadata
 obj.name    = "ClickStabilizer"
-obj.version = "1.0"
+obj.version = "1.0.1"
 obj.author  = "Hadi Skeini <hadiskeini@icloud.com>"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 
