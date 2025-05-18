@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Version](https://img.shields.io/badge/version-1.0-blue.svg)](https://github.com/hadiskeini/ClickStabilizer.spoon)
 
-Prevent accidental mouse cursor movement immediately after clicking.
+A [Hammerpoon](https://www.hammerspoon.org/) Spoon that prevents accidental mouse cursor movement immediately after clicking.
 
 ## What it Does
 
