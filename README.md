@@ -13,7 +13,7 @@ ClickStabilizer combats accidental cursor drags that happens when you just try t
 *   **Sensitive Trackpads/Mice:** Prevents jitters from overly responsive devices.
 *   **Users with Tremors:** Helps compensate for minor involuntary hand movements that can shift the cursor post-click.
 
-The Spoon works by briefly "locking" your cursor at its click position for a configurable duration (default: 120ms). This stops accidental micro-drags or movements, ensuring your clicks are registered precisely where you intended.
+The Spoon works by briefly "locking" your cursor at its click position for a configurable duration (default: 100 ms). This stops accidental micro-drags or movements, ensuring your clicks are registered precisely where you intended.
 
 > [!NOTE]  
 > This Spoon can target the specific pointing device you choose—but it currently can’t tell one mouse or trackpad from another. It does, however, distinguish between graphic tablets and other devices. When you configure it for your tablet, mouse and trackpad input will remain unaffected.
@@ -55,7 +55,7 @@ The Spoon needs to identify the unique event flags associated with the pointing 
 
 ### 2. Adjust Lock Duration (Optional)
 
-The default lock duration is 120 milliseconds. If you want to change this:
+The default lock duration is 100 milliseconds. If you want to change this:
 
 1.  Open the Hammerspoon Console.
 2.  Type the following command, replacing `150` with your desired duration in milliseconds, and press Enter:
@@ -84,7 +84,7 @@ You can run these commands in the Hammerspoon Console:
 *   `cs:resetDefaults()`
     *   Resets all settings (device flags and lock duration) to their default values.
     *   Default event flags: `0x20000100` (corresponds to Wacom One CTC4110WL)
-    *   Default lock duration: `120` ms
+    *   Default lock duration: `100` ms
 
 ## Contributing
 

@@ -21,7 +21,7 @@ obj.persistKeyLock  = "ClickStabilizer.LOCK_MS"
 
 -- Defaults (overwritten by previous settings)
 obj.eventFlags = hs_settings.get(obj.persistKeyFlags) or 0x20000100
-obj.lockMs     = hs_settings.get(obj.persistKeyLock)  or 120
+obj.lockMs     = hs_settings.get(obj.persistKeyLock)  or 100
 
 -- Event types
 local types = hs_eventtap.event.types
@@ -72,7 +72,7 @@ end
 --- Resets all settings to their default values
 function obj:resetDefaults()
     local defaultFlags = 0x20000100
-    local defaultLock  = 120
+    local defaultLock  = 100
     self.eventFlags    = defaultFlags
     self.lockMs        = defaultLock
     self.lockSeconds   = defaultLock / 1000
@@ -131,7 +131,7 @@ function obj:start()
     self.eventTap:start()
     print("=== ClickStabilizer — How to use ===")
     print("cs:setDevice()        → Set up the pointing device that should be affected")
-    print("cs:setLock(ms)        → Set the click-lock duration in milliseconds (DEFAULT: 120)")
+    print("cs:setLock(ms)        → Set the click-lock duration in milliseconds (default: 100)")
     print("cs:resetDefaults()    → Reset all settings")
     print("cs:stop()             → Stop the ClickStabilizer Spoon")
     print("====================================")
