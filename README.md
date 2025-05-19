@@ -42,30 +42,9 @@ The Spoon works by briefly "locking" your cursor at its click position for a con
 
 Once installed and loaded, ClickStabilizer needs to know which pointing device it should monitor.
 
-### 1. Identify Your Pointing Device (Crucial First Step!)
+You can do this by opening the configuration menu from the menu bar icon and clicking "Identify Device".
 
-The Spoon needs to identify the unique event flags associated with the pointing device you want to stabilize (e.g., your graphic tablet pen).
-
-1.  Open the Hammerspoon Console (Hammerspoon menu bar icon -> Console).
-2.  Type the following command and press Enter:
-    ```lua
-    cs:setDevice()
-    ```
-    and follow the instructions.
-
-### 2. Adjust Lock Duration (Optional)
-
-The default lock duration is 100 milliseconds. If you want to change this:
-
-1.  Open the Hammerspoon Console.
-2.  Type the following command, replacing `150` with your desired duration in milliseconds, and press Enter:
-    ```lua
-    cs:setLock(150) -- Sets lock duration to 150ms
-    ```
-
-### Available Commands
-
-You can run these commands in the Hammerspoon Console:
+## Available Commands in Hammerspoon Console
 
 *   `cs:start()`
     *   Starts the ClickStabilizer. This is usually called in your `init.lua`.
@@ -73,7 +52,7 @@ You can run these commands in the Hammerspoon Console:
 *   `cs:stop()`
     *   Stops the ClickStabilizer.
 *   `cs:setDevice()`
-    *   Initiates the process to detect and save the event flags for your target pointing device. **This is the most important setup step.**
+    *   Initiates the process to detect and save the event flags for your target pointing device. 
 *   `cs:setLock(milliseconds)`
     *   Sets the duration (in milliseconds) for which the cursor will be locked after a click.
     *   Example: `cs:setLock(100)` sets the lock to 100ms.
