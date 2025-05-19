@@ -156,6 +156,13 @@ function obj:start()
         return self:masterEventCallback(e)
     end)
     self.eventTap:start()
+    if self.menuBar then
+        local lockedIconPath = hs.spoons.resourcePath("csmenubar_locked.svg")
+        local lockedIcon = hs_image.imageFromPath(lockedIconPath)
+        if lockedIcon then
+            self.menuBar:setIcon(lockedIcon)
+        end
+    end
     print("=== ClickStabilizer — How to use ===")
     print("cs:setDevice()        → Set up the pointing device that should be affected")
     print("cs:setLock(ms)        → Set the click-lock duration in milliseconds (default: 100)")
@@ -180,6 +187,13 @@ function obj:stop()
     self.isActive      = false
     self.startPosition = nil
     print("ClickStabilizer stopped.")
+    if self.menuBar then
+        local unlockedIconPath = hs.spoons.resourcePath("csmenubar_unlocked.svg")
+        local unlockedIcon = hs_image.imageFromPath(unlockedIconPath)
+        if unlockedIcon then
+            self.menuBar:setIcon(unlockedIcon)
+        end
+    end
 end
 
 function obj:setDevice()
@@ -331,7 +345,7 @@ function obj:bindHotkeyAndMenu()
     self.menuBar = hs_menubar.new()
     if self.menuBar then
         -- Load custom menubar icon from Spoon resources
-        local iconPath = hs.spoons.resourcePath("csmenubar.svg")
+        local iconPath = hs.spoons.resourcePath("csmenubar_unlocked.svg")
         local iconImage = hs_image.imageFromPath(iconPath)
         -- Only check for non-nil image; remove isNil() call which is not defined
         if iconImage then
