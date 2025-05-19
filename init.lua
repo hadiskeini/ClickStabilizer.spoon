@@ -330,8 +330,10 @@ function obj:bindHotkeyAndMenu()
     -- Menubar icon
     self.menuBar = hs_menubar.new()
     if self.menuBar then
-        -- Try system cursor icon; fallback to emoji
-        local iconImage = hs_image.systemImage and hs_image.systemImage("cursorarrow") or nil
+        -- Load custom menubar icon from Spoon resources
+        local iconPath = hs.spoons.resourcePath("csmenubar.svg")
+        local iconImage = hs_image.imageFromPath(iconPath)
+        -- Only check for non-nil image; remove isNil() call which is not defined
         if iconImage then
             self.menuBar:setIcon(iconImage)
         else
