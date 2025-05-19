@@ -4,7 +4,7 @@ obj.__index = obj
 
 -- Metadata
 obj.name    = "ClickStabilizer"
-obj.version = "1.0.1"
+obj.version = "1.2.0"
 obj.author  = "Hadi Skeini <hadiskeini@icloud.com>"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 
@@ -14,6 +14,9 @@ local hs_mouse    = require("hs.mouse")
 local hs_timer    = require("hs.timer")
 local hs_console  = require("hs.console")
 local hs_settings = require("hs.settings")
+local hs_hotkey   = require("hs.hotkey")
+local hs_menubar  = require("hs.menubar")
+local hs_image    = require("hs.image")
 
 -- Persistence keys
 obj.persistKeyFlags = "ClickStabilizer.EVENT_FLAGS"
@@ -32,7 +35,6 @@ local DRAG_R  = types.rightMouseDragged
 local DRAG_O  = types.otherMouseDragged
 
 -- Initialize state
---- Initializes internal state for the Spoon
 function obj:init()
     self.isActive      = false
     self.startPosition = nil
@@ -42,8 +44,6 @@ function obj:init()
     self.lockSeconds   = self.lockMs / 1000
 end
 
---- Sets the event flags to identify your pointing device
--- @param flag A number (e.g. 0x20000100) representing the device flags
 function obj:setEventFlags(flag)
     local num = tonumber(flag)
     if not num then
@@ -55,8 +55,6 @@ function obj:setEventFlags(flag)
     print("✅ Great! ClickStabilizer is now functional!")
 end
 
---- Sets the lock duration in milliseconds
--- @param ms Number of milliseconds to lock the cursor after click
 function obj:setLock(ms)
     local num = tonumber(ms)
     if not num or num < 0 then
@@ -69,7 +67,6 @@ function obj:setLock(ms)
     print(string.format("✅ When you click, your cursor position is now locked for %d ms.", num))
 end
 
---- Resets all settings to their default values
 function obj:resetDefaults()
     local defaultFlags = 0x20000100
     local defaultLock  = 100
@@ -81,17 +78,11 @@ function obj:resetDefaults()
     print("✅ ClickStabilizer settings have been reset to defaults!")
 end
 
---- Checks if the incoming event matches the configured device flags
--- @param event The HS eventtap event object
--- @return boolean True if the event is from the configured device
 function obj:isDeviceTapEvent(event)
     local raw = event:getRawEventData()
     return raw and raw.CGEventData and raw.CGEventData.flags == self.eventFlags
 end
 
---- Core event callback enforcing the click lock
--- @param event The HS eventtap event
--- @return boolean True to swallow the event, false to pass it through
 function obj:masterEventCallback(event)
     local t = event:getType()
 
@@ -121,7 +112,6 @@ function obj:masterEventCallback(event)
     return false
 end
 
---- Starts the ClickStabilizer Spoon by registering the event tap
 function obj:start()
     if self.eventTap then return end
     self:init()
@@ -137,7 +127,6 @@ function obj:start()
     print("====================================")
 end
 
---- Stops the ClickStabilizer Spoon, cleaning up event taps and timers
 function obj:stop()
     if self.eventTap then
         self.eventTap:stop()
@@ -151,20 +140,17 @@ function obj:stop()
         self.flagFinderTap:stop()
         self.flagFinderTap = nil
     end
-    self.isActive    = false
+    self.isActive      = false
     self.startPosition = nil
     print("ClickStabilizer stopped.")
 end
 
---- Initiates a one-time listener to detect and save the current device flags
 function obj:setDevice()
     if self.flagFinderTap and self.flagFinderTap:isEnabled() then
         print("We’re already waiting for your click. Go ahead! 👆")
         return
     end
-
     print("Let’s identify your pointing device!")
-
     self.flagFinderTap = hs_eventtap.new({DOWN}, function(e)
         local raw = e:getRawEventData()
         if raw and raw.CGEventData and raw.CGEventData.flags then
@@ -177,7 +163,6 @@ function obj:setDevice()
         self.flagFinderTap = nil
         return false
     end)
-
     if self.flagFinderTap then
         self.flagFinderTap:start()
         print("Click your pointing device once...")
@@ -185,5 +170,44 @@ function obj:setDevice()
         print("Oops! Couldn’t start. Check your permissions.")
     end
 end
+
+--- Toggles the ClickStabilizer on or off
+function obj:toggle()
+    if self.eventTap then
+        self:stop()
+    else
+        self:start()
+    end
+end
+
+--- Binds the global hotkey and creates a menubar icon
+function obj:bindHotkeyAndMenu()
+    -- Global hotkey: cmd+option+L
+    hs_hotkey.bind({"cmd", "alt"}, "L", function()
+        self:toggle()
+    end)
+
+    -- Menubar icon
+    self.menuBar = hs_menubar.new()
+    if self.menuBar then
+        -- Try system cursor icon; fallback to emoji
+        local iconImage = hs_image.systemImage and hs_image.systemImage("cursorarrow") or nil
+        if iconImage then
+            self.menuBar:setIcon(iconImage)
+        else
+            self.menuBar:setTitle("🖱")
+        end
+        self.menuBar:setClickCallback(function()
+            self:toggle()
+        end)
+        self.menuBar:setMenu(function()
+            local title = self.eventTap and "Stop ClickStabilizer" or "Start ClickStabilizer"
+            return {{ title = title, fn = function() self:toggle() end }}
+        end)
+    end
+end
+
+-- Setup hotkey and menubar when Spoon loads
+obj:bindHotkeyAndMenu()
 
 return obj
