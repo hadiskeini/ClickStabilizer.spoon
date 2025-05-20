@@ -159,9 +159,11 @@ end
 -- Modified click/drag handling algorithm
 function obj:masterEventCallback(event)
     local eventType = event:getType()
+    local clickProp = hs_eventtap.event.properties.mouseEventClickState
     -- Helper to finish a click
     local function finishClick()
-        hs_eventtap.event.newMouseEvent(UP, self.startPosition):post()
+        local clickCount = event:getProperty(clickProp) or 1
+        hs_eventtap.event.newMouseEvent(UP, self.startPosition):setProperty(clickProp, clickCount):post()
         self.state = nil
     end
 
@@ -171,7 +173,8 @@ function obj:masterEventCallback(event)
         self.currentPosition = self.startPosition
         self.thresholdCrossed = false
         self.mouseDownTime = hs_timer.secondsSinceEpoch() * 1000
-        hs_eventtap.event.newMouseEvent(DOWN, self.startPosition):post()
+        local clickCount = event:getProperty(clickProp) or 1
+        hs_eventtap.event.newMouseEvent(DOWN, self.startPosition):setProperty(clickProp, clickCount):post()
         return true
     end
 
